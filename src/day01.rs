@@ -21,21 +21,12 @@ pub fn solution() {
 
     inventory.sort_by(|a, b| b.cmp(a));
 
-    println!(
-        "| {0: <10} | {1: <10} |",
-        "Name", "Value",
-    );
-    println!("| {0: <10} | {1: <10} |", "----------",  "----------");
-    if let Some(top1) = inventory.get(0) {
-        println!("| {0: <10} | {1: <10} |", "Top 1", top1);
-    }
+    let top1 = inventory.get(0).unwrap_or(&0);
+    let top3: u32 = inventory.get(0..3).unwrap_or(&[]).iter().sum();
 
-    let mut top3 = 0;
-    for i in 0..3 {
-        if let Some(calories) = inventory.get(i) {
-            top3 += calories;
-        }
-    }
+    println!("\n| {0: <10} | {1: <10} |", "Name", "Value");
+    println!("| {0: <10} | {1: <10} |", "----------",  "----------");
+    println!("| {0: <10} | {1: <10} |", "Top 1", top1);
     println!("| {0: <10} | {1: <10} |", "Top 3", top3);
 }
 
