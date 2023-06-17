@@ -1,25 +1,14 @@
+use std::fs;
+
 pub fn solution() {
-    let input = "1000
-2000
-3000
-
-4000
-
-5000
-6000
-
-7000
-8000
-9000
-
-10000";
+    let chars: String = fs::read_to_string("src/day01.input").unwrap().parse().unwrap();
     let mut that_elf = (0, 0);
-    let mut counter: u16 = 0;
+    let mut counter: u32 = 0;
     let mut position = 1;
-    let input: Vec<&str> = input.split("\n").collect();
+    let input: Vec<&str> = chars.split("\n").collect();
 
     for s in input {
-        let num = s.trim().parse::<u16>();
+        let num = s.trim().parse::<u32>();
         match num {
             Ok(n) => counter += n,
             Err(e) => match e.kind() {
