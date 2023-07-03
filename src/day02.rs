@@ -1,12 +1,6 @@
-use std::fs;
+use super::inputs;
 
-fn get_input() -> Vec<String> {
-    let chars: String = fs::read_to_string("src/day02.input").unwrap().parse().unwrap();
-    chars.split("\r\n").map(|s| s.to_string()).collect()
-}
-
-pub fn solution_part1() {
-    let input = get_input();
+fn part1(input: &Vec<String>) {
     let mut total_score = 0;
     for pair_str in input {
         if pair_str == "" {
@@ -24,14 +18,13 @@ pub fn solution_part1() {
             _ => {}
         }
     }
-    println!("\n| {0: <10} | {1: <10} |", "Score", "Pair");
-    println!("| {0: <10} | {1: <10} |", "----------",  "----------");
-    println!("| {0: <10} | {1: <10} |", total_score, 0);
+    println!("| {0: <10} |", "Score");
+    println!("| {0: <10} |", "----------");
+    println!("| {0: <10} |", total_score);
 }
 
 
-pub fn solution_part2() {
-    let input = get_input();
+fn part2(input: &Vec<String>) {
     let mut total_score = 0;
     for pair_str in input {
         if pair_str == "" {
@@ -47,9 +40,17 @@ pub fn solution_part2() {
             _ => {}
         }
     }
-    println!("\n| {0: <10} | {1: <10} |", "Score", "Pair");
-    println!("| {0: <10} | {1: <10} |", "----------",  "----------");
-    println!("| {0: <10} | {1: <10} |", total_score, 0);
+    println!("| {0: <10} |", "Score");
+    println!("| {0: <10} |", "----------");
+    println!("| {0: <10} |", total_score);
 }
 
-
+pub fn solution() {
+    let sep: &str = "=====";
+    println!("\n{0} DAY 02 {0}", sep);
+    let input = inputs::get_input("day02.input");
+    println!("[PART 01]:");
+    part1(&input);
+    println!("[PART 02]:");
+    part2(&input);
+}

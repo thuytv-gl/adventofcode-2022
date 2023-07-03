@@ -1,14 +1,10 @@
+mod inputs;
 mod day01;
 mod day02;
+mod day03;
 
 fn main() {
-    let day = 2;
-    match day {
-        1 => day01::solution(),
-        2 => {
-            day02::solution_part1();
-            day02::solution_part2();
-        },
-        _ => {},
-    }
+    day01::solution();
+    day02::solution();
+    day03::solution();
 }
