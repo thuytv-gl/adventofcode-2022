@@ -50,7 +50,25 @@ func Solution1(file string) int {
 	return distance;
 }
 
+func Solution2(file string) int {
+	arr1, arr2 := ReadInput(file)
+	rightRepeatCount := make(map[int]int)
+	distance := 0
+
+	for _, v := range(arr2) {
+		rightRepeatCount[v] = rightRepeatCount[v] + 1
+	}
+
+	for _, v := range(arr1) {
+		distance +=  rightRepeatCount[v] * v;
+	}
+
+	return distance
+}
+
 func main() {
-	fmt.Println("example distance: ", Solution1("01/example.txt"))
-	fmt.Println("input1 distance: ", Solution1("01/input.txt"))
+	fmt.Println("Part 01 example: ", Solution1("01/example.txt"))
+	fmt.Println("Part 01: ", Solution1("01/input.txt"))
+	fmt.Println("Part 02 example: ", Solution2("01/example.txt"))
+	fmt.Println("Part 02: ", Solution2("01/input.txt"))
 }
