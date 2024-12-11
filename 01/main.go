@@ -1,74 +1,114 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-	"os"
-	"strconv"
-	"sort"
+    "fmt"
+    "os"
+    "sort"
+    "strconv"
+    "strings"
 )
 
-func ReadInput(file string) ([]int, []int) {
-	dat, err := os.ReadFile(file)
-    check(err)
-	lines := strings.Split(string(dat), "\n")
-	var arr1 []int
-	var arr2 []int
-
-	for _, line := range(lines) {
-		splted := strings.Split(line, "   ")
-		na, _ := strconv.Atoi(splted[0])
-		nb, _ := strconv.Atoi(splted[1])
-		arr1 = append(arr1, na)
-		arr2 = append(arr2, nb)
-	}
-	sort.Slice(arr1, func(i, j int) bool {
-		return arr1[i] < arr1[j]
-	})
-	sort.Slice(arr2, func(i, j int) bool {
-		return arr2[i] < arr2[j]
-	})
-	return arr1, arr2
-}
-
-func check(e error) {
-    if e != nil {
-        panic(e)
+// ReadInput reads the input file and returns two sorted slices of integers.
+func ReadInput(file string) ([]int, []int, error) {
+    data, err := os.ReadFile(file)
+    if err != nil {
+        return nil, nil, err
     }
+
+    lines := strings.Split(strings.TrimSpace(string(data)), "\n")
+    var arr1, arr2 []int
+
+    for _, line := range lines {
+        splitted := strings.Fields(line)
+        if len(splitted) < 2 {
+            continue
+        }
+        na, err := strconv.Atoi(splitted[0])
+        if err != nil {
+            return nil, nil, err
+        }
+        nb, err := strconv.Atoi(splitted[1])
+        if err != nil {
+            return nil, nil, err
+        }
+        arr1 = append(arr1, na)
+        arr2 = append(arr2, nb)
+    }
+
+    sort.Ints(arr1)
+    sort.Ints(arr2)
+
+    return arr1, arr2, nil
 }
 
-func Solution1(file string) int {
-	arr1, arr2 := ReadInput(file)
-	distance := 0
-	for i := range(len(arr1)) {
-		if arr2[i] > arr1[i] {
-			distance += arr2[i] - arr1[i]
-		} else {
-			distance -= arr2[i] - arr1[i]
-		}
-	}
-	return distance;
+// Solution1 calculates the distance based on the input file.
+func Solution1(file string) (int, error) {
+    arr1, arr2, err := ReadInput(file)
+    if err != nil {
+        return 0, err
+    }
+
+    distance := 0
+    for i := range arr1 {
+        distance += abs(arr2[i] - arr1[i])
+    }
+
+    return distance, nil
 }
 
-func Solution2(file string) int {
-	arr1, arr2 := ReadInput(file)
-	rightRepeatCount := make(map[int]int)
-	distance := 0
+// Solution2 calculates the weighted sum of repeated elements based on the input file.
+func Solution2(file string) (int, error) {
+    arr1, arr2, err := ReadInput(file)
+    if err != nil {
+        return 0, err
+    }
 
-	for _, v := range(arr2) {
-		rightRepeatCount[v] = rightRepeatCount[v] + 1
-	}
+    rightRepeatCount := make(map[int]int)
+    for _, v := range arr2 {
+        rightRepeatCount[v]++
+    }
 
-	for _, v := range(arr1) {
-		distance +=  rightRepeatCount[v] * v;
-	}
+    distance := 0
+    for _, v := range arr1 {
+        distance += rightRepeatCount[v] * v
+    }
 
-	return distance
+    return distance, nil
+}
+
+// abs returns the absolute value of an integer.
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
 }
 
 func main() {
-	fmt.Println("Part 01 example: ", Solution1("01/example.txt"))
-	fmt.Println("Part 01: ", Solution1("01/input.txt"))
-	fmt.Println("Part 02 example: ", Solution2("01/example.txt"))
-	fmt.Println("Part 02: ", Solution2("01/input.txt"))
+    exampleFile := "01/example.txt"
+    inputFile := "01/input.txt"
+
+    if result, err := Solution1(exampleFile); err != nil {
+        fmt.Printf("Error in Solution1 with example file: %v\n", err)
+    } else {
+        fmt.Printf("Part 01 example: %d\n", result)
+    }
+
+    if result, err := Solution1(inputFile); err != nil {
+        fmt.Printf("Error in Solution1 with input file: %v\n", err)
+    } else {
+        fmt.Printf("Part 01: %d\n", result)
+    }
+
+    if result, err := Solution2(exampleFile); err != nil {
+        fmt.Printf("Error in Solution2 with example file: %v\n", err)
+    } else {
+        fmt.Printf("Part 02 example: %d\n", result)
+    }
+
+    if result, err := Solution2(inputFile); err != nil {
+        fmt.Printf("Error in Solution2 with input file: %v\n", err)
+    } else {
+        fmt.Printf("Part 02: %d\n", result)
+    }
 }

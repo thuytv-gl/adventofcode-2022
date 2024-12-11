@@ -1,2 +1,1 @@
-[https://adventofcode.com/2023]()
-Rust implementation
+[https://adventofcode.com/2024]() Golang implementation
