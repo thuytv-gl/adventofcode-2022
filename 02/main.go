@@ -5,6 +5,7 @@ import (
     "os"
     "strings"
     "strconv"
+    "sort"
 )
 
 func ParseInput(file string) ([][]int) {
@@ -35,38 +36,54 @@ func Abs(num int) int {
     return -num
 }
 
-func hasMistake(a, b int, direction bool) bool {
+func hasMistake(a, b int) bool {
     r := Abs(a - b)
-    return (a > b) != direction || r > 3 || r == 0
+    return r > 3 || r == 0
 }
 
-func GetErrorIndexes(line []int) []int {
+func Remove(slice []int, s int) []int {
+    return append(slice[:s], slice[s+1:]...)
+}
+
+func AllIncreasing(line []int) bool {
+    return sort.SliceIsSorted(line, func(a, b int) bool { return a < b })
+}
+
+func AllDecreasing(line []int) bool {
+    return sort.SliceIsSorted(line, func(a, b int) bool { return a > b })
+}
+
+func IsSafe(line []int, selfCorrect int) bool {
     lim := len(line) - 1
-    var errors []int
-    direction := line[0] > line[1]
+    fixedCount := 0
+    errors := 0
 
     for i := 0; i < lim; i++ {
         a := line[i]
         b := line[i + 1]
 
-        if hasMistake(a, b, direction) {
-            errors = append(errors, i + 0)
+        if !(AllIncreasing(line) || AllDecreasing(line)) || hasMistake(a, b) {
+            errors++
+            if fixedCount < selfCorrect {
+                if IsSafe(Remove(line, i), 0) || IsSafe(Remove(line, i + 1), 0) {
+                    errors--
+                    fixedCount++
+                }
+            }
         }
     }
 
-    return errors
+    return errors == 0
 }
 
-func Solution(file string, maxerrors int) int {
+func Solution(file string, selfCorrect int) int {
     safeCount := 0
     reports := ParseInput(file)
 
     for _, line := range reports {
-        errors := GetErrorIndexes(line)
-        if len(errors) <= maxerrors {
+        if IsSafe(line, selfCorrect) {
             safeCount++
         }
-        fmt.Println(errors, line)
     }
 
     return safeCount
@@ -74,7 +91,7 @@ func Solution(file string, maxerrors int) int {
 
 func main() {
     fmt.Println("Part 01 example:", Solution("02/example.txt", 0))
-    // fmt.Println("Part 01:", Solution("02/input.txt", 0))
+    fmt.Println("Part 01:", Solution("02/input.txt", 0))
     fmt.Println("Part 02 example:", Solution("02/example.txt", 1))
-    // fmt.Println("Part 02:", Solution("02/input.txt", 1))
+    fmt.Println("Part 02:", Solution("02/input.txt", 1))
 }
