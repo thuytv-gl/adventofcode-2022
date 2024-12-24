@@ -8,23 +8,23 @@ import (
     "sort"
 )
 
-func ParseInput(file string) ([][]int) {
+func ParseInput(file string) [][]int {
     data, err := os.ReadFile(file)
     if err != nil {
         return nil
     }
 
     lines := strings.Split(strings.TrimSpace(string(data)), "\n")
-    var reports [][]int
+    reports := make([][]int, len(lines))
 
-    for _, line := range lines {
+    for i, line := range lines {
         splitted := strings.Fields(line)
-        var report []int
-        for _, n := range splitted {
-            num, _ := strconv.Atoi(n);
-            report = append(report, num)
+        report := make([]int, len(splitted))
+        for j, n := range splitted {
+            num, _ := strconv.Atoi(n)
+            report[j] = num
         }
-        reports = append(reports, report)
+        reports[i] = report
     }
     return reports
 }
